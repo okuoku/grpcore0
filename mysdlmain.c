@@ -1,0 +1,77 @@
+/* SDL main */
+
+#include <SDL.h>
+
+/* 1000 random rects */
+
+#define NRECTS 1000
+
+static SDL_Rect rects[NRECTS];
+
+/* From Wikipedia */
+
+uint32_t x = 0x1234;
+uint32_t y = 0x4321;
+uint32_t z = 0x9999;
+uint32_t w = 0xaaaa;
+
+uint32_t
+xorshift128(void) {
+    uint32_t t = x;
+    t ^= t << 11;
+    t ^= t >> 8;
+    x = y; y = z; z = w;
+    w ^= w >> 19;
+    w ^= t;
+    return w;
+}
+
+void
+layoutrect(SDL_Rect* r){
+    uint32_t xx = xorshift128() & 0x3ff;
+    uint32_t yy = xorshift128() & 0x1ff;
+    r->x = xx;
+    r->y = yy;
+    r->w = 64;
+    r->h = 64;
+}
+
+void
+layoutrects(void){
+    for(int i=0;i!=NRECTS;i++){
+        layoutrect(&rects[i]);
+    }
+}
+
+int
+SDL_main(int argc, char** av){
+    SDL_DisplayMode mode;
+    SDL_Window* window = NULL;
+    SDL_Renderer* renderer = NULL;
+    SDL_Event evt;
+
+    if(SDL_Init(SDL_INIT_VIDEO)){
+        return -1;
+    }
+
+    if(SDL_GetCurrentDisplayMode(0, &mode)){
+        return -1;
+    }
+
+    if(SDL_CreateWindowAndRenderer(mode.w, mode.h, SDL_WINDOW_FULLSCREEN,
+                                   &window, &renderer)){
+        return -1;
+    }
+
+    for(;;){
+        while(SDL_PollEvent(&evt)){
+        }
+        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        SDL_RenderClear(renderer);
+        layoutrects();
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderFillRects(renderer, rects, NRECTS);
+        SDL_RenderPresent(renderer);
+    }
+    return 0;
+}
