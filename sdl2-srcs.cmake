@@ -15,6 +15,66 @@ set(sdl2_winrt_srcs
     video/winrt/SDL_winrtvideo.cpp
     )
 
+set(sdl2_win32_common_srcs
+    audio/xaudio2/SDL_xaudio2.c
+    core/windows/SDL_windows.c
+    core/windows/SDL_xinput.c
+    haptic/windows/SDL_dinputhaptic.c
+    haptic/windows/SDL_windowshaptic.c
+    haptic/windows/SDL_xinputhaptic.c
+    joystick/windows/SDL_dinputjoystick.c
+    joystick/windows/SDL_windowsjoystick.c
+    joystick/windows/SDL_xinputjoystick.c
+    loadso/windows/SDL_sysloadso.c
+    render/direct3d11/SDL_render_d3d11.c
+    timer/windows/SDL_systimer.c
+    )
+
+set(sdl2_android_srcs
+    audio/android/SDL_androidaudio.c
+    # atomic/SDL_spinlock.c.arm # FIXME: generate this?
+    core/android/SDL_android.c
+    joystick/android/SDL_sysjoystick.c
+
+    # FIXME: Not andorid specific..
+    loadso/dlopen/SDL_sysloadso.c
+
+    power/android/SDL_syspower.c
+    filesystem/android/SDL_sysfilesystem.c
+
+    # FIXME: Not andorid specific..
+    render/opengles/SDL_render_gles.c
+
+    # FIXME: Not andorid specific..
+    thread/pthread/SDL_syscond.c
+    thread/pthread/SDL_sysmutex.c
+    thread/pthread/SDL_syssem.c
+    thread/pthread/SDL_systhread.c
+    thread/pthread/SDL_systls.c
+
+    # FIXME: Not andorid specific..
+    timer/unix/SDL_systimer.c
+
+    video/android/SDL_androidclipboard.c
+    video/android/SDL_androidevents.c
+    video/android/SDL_androidgl.c
+    video/android/SDL_androidkeyboard.c
+    video/android/SDL_androidmessagebox.c
+    video/android/SDL_androidmouse.c
+    video/android/SDL_androidtouch.c
+    video/android/SDL_androidvideo.c
+    video/android/SDL_androidwindow.c
+    )
+
+set(sdl2_stdcpp_srcs
+    # FIXME: OK?
+    thread/generic/SDL_syssem.c
+
+    thread/stdcpp/SDL_syscond.cpp
+    thread/stdcpp/SDL_sysmutex.cpp
+    thread/stdcpp/SDL_systhread.cpp
+    )
+
 set(sdl2_common_srcs
     atomic/SDL_atomic.c
     atomic/SDL_spinlock.c
@@ -28,11 +88,6 @@ set(sdl2_common_srcs
     audio/SDL_audiotypecvt.c
     audio/SDL_mixer.c
     audio/SDL_wave.c
-
-    audio/xaudio2/SDL_xaudio2.c
-
-    core/windows/SDL_windows.c
-    core/windows/SDL_xinput.c
 
     cpuinfo/SDL_cpuinfo.c
 
@@ -52,22 +107,13 @@ set(sdl2_common_srcs
 
     haptic/dummy/SDL_syshaptic.c
     haptic/SDL_haptic.c
-    haptic/windows/SDL_dinputhaptic.c
-    haptic/windows/SDL_windowshaptic.c
-    haptic/windows/SDL_xinputhaptic.c
 
     joystick/dummy/SDL_sysjoystick.c
     joystick/SDL_gamecontroller.c
     joystick/SDL_joystick.c
-    joystick/windows/SDL_dinputjoystick.c
-    joystick/windows/SDL_windowsjoystick.c
-    joystick/windows/SDL_xinputjoystick.c
-
-    loadso/windows/SDL_sysloadso.c
 
     power/SDL_power.c
 
-    render/direct3d11/SDL_render_d3d11.c
     render/opengles2/SDL_render_gles2.c
     render/opengles2/SDL_shaders_gles2.c
     render/SDL_d3dmath.c
@@ -95,14 +141,9 @@ set(sdl2_common_srcs
     stdlib/SDL_stdlib.c
     stdlib/SDL_string.c
 
-    thread/generic/SDL_syssem.c
     thread/SDL_thread.c
-    thread/stdcpp/SDL_syscond.cpp
-    thread/stdcpp/SDL_sysmutex.cpp
-    thread/stdcpp/SDL_systhread.cpp
 
     timer/SDL_timer.c
-    timer/windows/SDL_systimer.c
 
     video/dummy/SDL_nullevents.c
     video/dummy/SDL_nullframebuffer.c
