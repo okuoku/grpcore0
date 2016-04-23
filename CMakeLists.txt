@@ -75,6 +75,7 @@ if(${grpcore_platform} STREQUAL "uwp")
             )
     endforeach()
 elseif(${grpcore_platform} STREQUAL "android")
+    include(./cmake/GrpCore0Android.cmake)
     # Android
     # Instanciate SDL2 srcs
     set(sdl2srcs)
@@ -100,4 +101,23 @@ elseif(${grpcore_platform} STREQUAL "android")
         GLESv2
         log
         android)
+
+    # Android packaging
+    set(deploy_dest
+        ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android/src/main/libs/armeabi-v7a/libgrpcore0.so)
+    add_custom_command(
+        OUTPUT ${deploy_dest}
+        COMMAND ${CMAKE_COMMAND}
+        -DIN=$<TARGET_FILE:grpcore0> -DOUT=${deploy_dest}
+        -P ${CMAKE_CURRENT_LIST_DIR}/cmake/deploy_file.cmake
+        )
+    add_custom_target(grpcore0_deploy
+        DEPENDS ${deploy_dest})
+    add_dependencies(grpcore0_deploy grpcore0)
+    add_gradle_command(apk ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android
+        build)
+    add_dependencies(apk grpcore0_deploy)
+    add_gradle_command(apk_clean
+        ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android
+        clean)
 endif()

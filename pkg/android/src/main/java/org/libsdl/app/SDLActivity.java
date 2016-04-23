@@ -70,12 +70,15 @@ public class SDLActivity extends Activity {
      */
     protected String[] getLibraries() {
         return new String[] {
+            "grpcore0"
+            /* FIXME: Just a quick test
             "SDL2",
             // "SDL2_image",
             // "SDL2_mixer",
             // "SDL2_net",
             // "SDL2_ttf",
             "main"
+            */
         };
     }
 
