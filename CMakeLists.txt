@@ -7,10 +7,19 @@ cmake_minimum_required(VERSION 2.8)
 set(grpcore_platform)
 
 # VisualStudio
-if(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
-    set(grpcore_platform "uwp")
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "VCMDDAndroid")
-    set(grpcore_platform "android")
+if(CMAKE_SYSTEM_NAME)
+    if(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
+        set(grpcore_platform "uwp")
+    elseif(${CMAKE_SYSTEM_NAME} STREQUAL "VCMDDAndroid")
+        set(grpcore_platform "android")
+    endif()
+endif()
+
+# 2nd chance
+if(NOT grpcore_platform)
+    if(WIN32)
+        set(grpcore_platform "win32")
+    endif()
 endif()
 
 if(grpcore_platform)
@@ -120,4 +129,34 @@ elseif(${grpcore_platform} STREQUAL "android")
     add_gradle_command(apk_clean
         ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android
         clean)
+elseif(${grpcore_platform} STREQUAL "win32")
+    # Win32 native
+
+    # Win32 main
+    set(sdl2win32main
+        ${sdl2path}/src/main/windows/SDL_windows_main.c)
+    # Instanciate SDL2 srcs
+    set(sdl2srcs)
+    foreach(e ${sdl2_common_srcs} ${sdl2_win32_common_srcs}
+            ${sdl2_libm_srcs}
+            ${sdl2_win32_desktop_srcs})
+        list(APPEND sdl2srcs ${sdl2path}/src/${e})
+    endforeach()
+    list(APPEND sdl2srcs ${sdl2win32main})
+
+    # Set toolchain options for SDL2 sources
+    set_source_files_properties(${sdl2srcs}
+        PROPERTIES
+        COMPILE_DEFINITIONS "_CRT_SECURE_NO_WARNINGS;_WINDOWS"
+        )
+
+    add_executable(grpcore0 WIN32
+        ${sdl2srcs}
+        mysdlmain.c)
+
+    target_link_libraries(grpcore0
+        winmm
+        imm32
+        version)
+
 endif()

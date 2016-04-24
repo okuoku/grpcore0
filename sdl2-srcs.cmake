@@ -30,6 +30,41 @@ set(sdl2_win32_common_srcs
     timer/windows/SDL_systimer.c
     )
 
+set(sdl2_win32_desktop_srcs
+    audio/directsound/SDL_directsound.c
+    audio/winmm/SDL_winmm.c
+    joystick/windows/SDL_mmjoystick.c
+    power/windows/SDL_syspower.c
+    render/direct3d/SDL_render_d3d.c
+
+    # FIXME: Not Win32 specific..
+    render/opengl/SDL_render_gl.c
+    render/opengl/SDL_shaders_gl.c
+
+    # FIXME: Not Win32 specific..
+    thread/generic/SDL_syscond.c
+
+    thread/windows/SDL_syssem.c
+    thread/windows/SDL_systhread.c
+    thread/windows/SDL_systls.c
+    thread/windows/SDL_sysmutex.c
+
+    video/windows/SDL_windowskeyboard.c
+    video/windows/SDL_windowsmessagebox.c
+    video/windows/SDL_windowsmodes.c
+    video/windows/SDL_windowsmouse.c
+    video/windows/SDL_windowsopengl.c
+    video/windows/SDL_windowsopengles.c
+    video/windows/SDL_windowsshape.c
+    video/windows/SDL_windowsvideo.c
+    video/windows/SDL_windowswindow.c
+    video/windows/SDL_windowsclipboard.c
+    video/windows/SDL_windowsevents.c
+    video/windows/SDL_windowsframebuffer.c
+
+    filesystem/windows/SDL_sysfilesystem.c
+    )
+
 set(sdl2_android_srcs
     audio/android/SDL_androidaudio.c
     # atomic/SDL_spinlock.c.arm # FIXME: generate this?
@@ -73,6 +108,26 @@ set(sdl2_stdcpp_srcs
     thread/stdcpp/SDL_syscond.cpp
     thread/stdcpp/SDL_sysmutex.cpp
     thread/stdcpp/SDL_systhread.cpp
+    )
+
+set(sdl2_libm_srcs
+    libm/e_atan2.c
+    libm/e_log.c
+    libm/e_pow.c
+    libm/e_rem_pio2.c
+    libm/e_sqrt.c
+    libm/k_cos.c
+    libm/k_rem_pio2.c
+    libm/k_sin.c
+    libm/k_tan.c
+    libm/s_atan.c
+    libm/s_copysign.c
+    libm/s_cos.c
+    libm/s_fabs.c
+    libm/s_floor.c
+    libm/s_scalbn.c
+    libm/s_sin.c
+    libm/s_tan.c
     )
 
 set(sdl2_common_srcs
