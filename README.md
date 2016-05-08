@@ -41,9 +41,3 @@ emconfigure cmake -G Ninja c:\path\to\here
 
 Currently we have to configure twice (to make CMakeCache settle).
 
-The build file won't generate application. To generate a working HTML app:
-
-```
-emcc -o check.html c:/path/to/here/emmain.c -L. -lgrpcore0
-```
-

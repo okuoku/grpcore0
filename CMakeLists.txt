@@ -181,5 +181,12 @@ elseif(${grpcore_platform} STREQUAL "emscripten")
         ${sdl2srcs}
         mysdlmain.c)
 
+    add_executable(grpcore0_html
+        pkg/emscripten/emmain.c)
+    target_link_libraries(grpcore0_html
+        grpcore0)
+    set_target_properties(grpcore0_html
+        PROPERTIES
+        SUFFIX ".html")
 endif()
 
