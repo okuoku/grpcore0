@@ -2,6 +2,11 @@
 
 #include <SDL.h>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
+
 /* 1000 random rects */
 
 #define NRECTS 1000
@@ -43,12 +48,25 @@ layoutrects(void){
     }
 }
 
+void
+loop(void* p){
+    SDL_Renderer* renderer = (SDL_Renderer *)p;
+    SDL_Event evt;
+    while(SDL_PollEvent(&evt)){
+    }
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_RenderClear(renderer);
+    layoutrects();
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderFillRects(renderer, rects, NRECTS);
+    SDL_RenderPresent(renderer);
+}
+
 int
 SDL_main(int argc, char** av){
     SDL_DisplayMode mode;
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
-    SDL_Event evt;
 
     if(SDL_Init(SDL_INIT_VIDEO)){
         return -1;
@@ -63,15 +81,12 @@ SDL_main(int argc, char** av){
         return -1;
     }
 
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop_arg(loop, renderer, 0, 1);
+#else
     for(;;){
-        while(SDL_PollEvent(&evt)){
-        }
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-        SDL_RenderClear(renderer);
-        layoutrects();
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderFillRects(renderer, rects, NRECTS);
-        SDL_RenderPresent(renderer);
+        loop(renderer);
     }
+#endif
     return 0;
 }

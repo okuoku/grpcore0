@@ -3,8 +3,16 @@ cmake_minimum_required(VERSION 2.8)
 # Platform dispatching
 # See https://cmake.org/cmake/help/v3.5/manual/cmake-toolchains.7.html
 
-# For VisualStudio
 set(grpcore_platform)
+
+message(STATUS "Toolchain = [${CMAKE_TOOLCHAIN_FILE}]")
+message(STATUS "System = [${CMAKE_SYSTEM_NAME}]")
+
+message(STATUS "Emscripten = ${EMSCRIPTEN}")
+
+if(EMSCRIPTEN)
+    set(grpcore_platform "emscripten")
+endif()
 
 # VisualStudio
 if(CMAKE_SYSTEM_NAME)
@@ -158,5 +166,20 @@ elseif(${grpcore_platform} STREQUAL "win32")
         winmm
         imm32
         version)
+elseif(${grpcore_platform} STREQUAL "emscripten")
+    # Emscripten
+    message(STATUS "Generating for emscripten runtime")
+    include_directories(
+        BEFORE # Override SDL_config.h
+        ${CMAKE_CURRENT_LIST_DIR}/include_sdl/emscripten)
+    set(sdl2srcs)
+    foreach(e ${sdl2_common_srcs} ${sdl2_emscripten_srcs})
+        list(APPEND sdl2srcs ${sdl2path}/src/${e})
+    endforeach()
+
+    add_library(grpcore0 STATIC
+        ${sdl2srcs}
+        mysdlmain.c)
 
 endif()
+

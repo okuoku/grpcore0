@@ -29,3 +29,21 @@ c:\path\to\here
  See
   https://blogs.msdn.microsoft.com/vcblog/2015/12/15/support-for-android-cmake-projects-in-visual-studio/
 
+Building for Emscripten
+=======================
+
+ 1) Configure with
+
+```
+emconfigure cmake -G Ninja c:\path\to\here
+emconfigure cmake -G Ninja c:\path\to\here
+```
+
+Currently we have to configure twice (to make CMakeCache settle).
+
+The build file won't generate application. To generate a working HTML app:
+
+```
+emcc -o check.html c:/path/to/here/emmain.c -L. -lgrpcore0
+```
+

@@ -65,6 +65,21 @@ set(sdl2_win32_desktop_srcs
     filesystem/windows/SDL_sysfilesystem.c
     )
 
+set(sdl2_emscripten_srcs
+    audio/emscripten/SDL_emscriptenaudio.c
+    filesystem/emscripten/SDL_sysfilesystem.c
+    joystick/emscripten/SDL_sysjoystick.c
+    power/emscripten/SDL_syspower.c
+    video/emscripten/SDL_emscriptenevents.c
+    video/emscripten/SDL_emscriptenframebuffer.c
+    video/emscripten/SDL_emscriptenmouse.c
+    video/emscripten/SDL_emscriptenopengles.c
+    video/emscripten/SDL_emscriptenvideo.c
+
+    # FIXME: Not emscripten specific..
+    thread/generic/SDL_systls.c
+    )
+
 set(sdl2_android_srcs
     audio/android/SDL_androidaudio.c
     # atomic/SDL_spinlock.c.arm # FIXME: generate this?
