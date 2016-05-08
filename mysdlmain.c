@@ -20,7 +20,7 @@ uint32_t y = 0x4321;
 uint32_t z = 0x9999;
 uint32_t w = 0xaaaa;
 
-uint32_t
+static uint32_t
 xorshift128(void) {
     uint32_t t = x;
     t ^= t << 11;
@@ -31,7 +31,7 @@ xorshift128(void) {
     return w;
 }
 
-void
+static void
 layoutrect(SDL_Rect* r){
     uint32_t xx = xorshift128() & 0x3ff;
     uint32_t yy = xorshift128() & 0x1ff;
@@ -41,14 +41,14 @@ layoutrect(SDL_Rect* r){
     r->h = 64;
 }
 
-void
+static void
 layoutrects(void){
     for(int i=0;i!=NRECTS;i++){
         layoutrect(&rects[i]);
     }
 }
 
-void
+static void
 loop(void* p){
     SDL_Renderer* renderer = (SDL_Renderer *)p;
     SDL_Event evt;
@@ -67,6 +67,10 @@ SDL_main(int argc, char** av){
     SDL_DisplayMode mode;
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
+
+#ifdef __EMSCRIPTEN__
+    emscripten_set_canvas_size(1280, 720);
+#endif
 
     if(SDL_Init(SDL_INIT_VIDEO)){
         return -1;
