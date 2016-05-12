@@ -5,3 +5,6 @@
 /.idea/libraries
 /build
 /captures
+gradlew
+gradlew.bat
+gradle/
