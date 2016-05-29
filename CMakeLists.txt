@@ -114,26 +114,24 @@ elseif(${grpcore_platform} STREQUAL "android")
     target_link_libraries(grpcore0
         m
         dl
+        EGL
         GLESv1_CM
         GLESv2
         log
         android)
 
     # Android packaging
-    set(deploy_dest
-        ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android/src/main/libs/armeabi-v7a/libgrpcore0.so)
+    set(deploy_destdir
+        ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android/src/main/libs/armeabi-v7a)
     add_custom_command(
-        OUTPUT ${deploy_dest}
+        TARGET grpcore0 POST_BUILD
         COMMAND ${CMAKE_COMMAND}
-        -DIN=$<TARGET_FILE:grpcore0> -DOUT=${deploy_dest}
+        -DIN=$<TARGET_FILE:grpcore0> -DOUTDIR=${deploy_destdir}
         -P ${CMAKE_CURRENT_LIST_DIR}/cmake/deploy_file.cmake
         )
-    add_custom_target(grpcore0_deploy
-        DEPENDS ${deploy_dest})
-    add_dependencies(grpcore0_deploy grpcore0)
     add_gradle_command(apk ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android
         build)
-    add_dependencies(apk grpcore0_deploy)
+    add_dependencies(apk grpcore0)
     add_gradle_command(apk_clean
         ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android
         clean)

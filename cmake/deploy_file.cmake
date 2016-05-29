@@ -2,23 +2,21 @@
 # deploy_file:
 #
 #  IN = Source file
-#  OUT = Output path
+#  OUTDIR = Output path
 
 
-get_filename_component(outdir
-    ${OUT}
-    PATH)
+#get_filename_component(outdir
+#    ${OUT}
+#    PATH)
+#
+#get_filename_component(outname
+#    ${OUT}
+#    NAME)
 
-get_filename_component(outname
-    ${OUT}
-    NAME)
+message(STATUS "Deploy ${IN} to ${OUTDIR}")
 
-message(STATUS "Deploy ${IN} to ${outdir} as ${outname}")
-
-file(INSTALL
+file(COPY
     "${IN}"
-    RENAME
-    ${outname}
     DESTINATION
-    "${outdir}")
+    "${OUTDIR}")
 
