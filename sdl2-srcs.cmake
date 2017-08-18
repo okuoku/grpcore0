@@ -17,6 +17,7 @@ set(sdl2_winrt_srcs
 
 set(sdl2_win32_common_srcs
     audio/xaudio2/SDL_xaudio2.c
+    audio/wasapi/SDL_wasapi.c
     core/windows/SDL_windows.c
     core/windows/SDL_xinput.c
     haptic/windows/SDL_dinputhaptic.c
@@ -200,6 +201,7 @@ set(sdl2_common_srcs
 
     SDL.c
     SDL_assert.c
+    SDL_dataqueue.c
     SDL_error.c
     SDL_hints.c
     SDL_log.c

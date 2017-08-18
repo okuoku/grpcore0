@@ -39,7 +39,7 @@ endif()
 include(./sdl2.cmake)
 
 # Generate SDL path
-set(sdl2path_orig ${CMAKE_CURRENT_LIST_DIR}/../SDL)
+set(sdl2path_orig ${CMAKE_CURRENT_LIST_DIR}/sdl)
 get_filename_component(sdl2path_abs ${sdl2path_orig} ABSOLUTE)
 file(TO_CMAKE_PATH ${sdl2path_abs} sdl2path)
 
