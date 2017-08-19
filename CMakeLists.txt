@@ -63,6 +63,14 @@ if(${grpcore_platform} STREQUAL "uwp")
     endforeach()
     list(APPEND sdl2srcs ${sdl2winrtmain})
 
+    set(mysdlegl "patch_sdl/SDL_egl_grpcore0.c")
+    include_directories(${sdl2path}/src/video)
+    list(APPEND sdl2srcs ${mysdlegl})
+
+    # Angle
+    set(angle_srcs)
+    use_static_angle(winrt angle_srcs)
+
     set(sdl2winrt)
     foreach(e ${sdl2_winrt_srcs})
         list(APPEND sdl2winrt ${sdl2path}/src/${e})
@@ -81,15 +89,27 @@ if(${grpcore_platform} STREQUAL "uwp")
 
     add_executable(grpcore0 WIN32
         ${sdl2srcs}
+        ${angle_srcs}
         mysdlmain.c)
+    target_link_libraries(grpcore0
+        dxguid)
 
-    # Hey, it's 2016!
+    # Hey, it's 2017!
     # https://cmake.org/pipermail/cmake-developers/2014-November/023524.html
-    foreach(e RELEASE RELWITHDEBINFO DEBUG)
+    # Release C++ runtime
+    foreach(e RELEASE RELWITHDEBINFO)
         set_target_properties(grpcore0
             PROPERTIES
             LINK_FLAGS_${e}
             "/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib"
+            )
+    endforeach()
+    # Debug C++ runtime
+    foreach(e DEBUG)
+        set_target_properties(grpcore0
+            PROPERTIES
+            LINK_FLAGS_${e}
+            "/nodefaultlib:vccorlib /nodefaultlib:msvcrtd vccorlib.lib msvcrtd.lib"
             )
     endforeach()
 elseif(${grpcore_platform} STREQUAL "android")
@@ -164,7 +184,7 @@ elseif(${grpcore_platform} STREQUAL "win32")
 
     # Angle
     set(angle_srcs)
-    use_static_angle(angle_srcs)
+    use_static_angle(win32 angle_srcs)
 
     add_executable(grpcore0 WIN32
         ${sdl2srcs}

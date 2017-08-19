@@ -7,6 +7,7 @@ set(sdl2_winrt_srcs
     power/winrt/SDL_syspower.cpp
     render/direct3d11/SDL_render_winrt.cpp
     video/winrt/SDL_winrtevents.cpp
+    video/winrt/SDL_winrtgamebar.cpp
     video/winrt/SDL_winrtkeyboard.cpp
     video/winrt/SDL_winrtmessagebox.cpp
     video/winrt/SDL_winrtmouse.cpp

@@ -309,7 +309,7 @@ set(angle_systeminfo_srcs # FIXME: Only for D3d9??
 
 
 
-macro(use_static_angle out_srcs)
+macro(use_static_angle flav out_srcs)
     include_directories(
         ${angle_root}/src
         ${angle_root}/include
@@ -328,12 +328,24 @@ macro(use_static_angle out_srcs)
         ${angle_libangle_d3d_common_srcs}
         #${angle_libangle_d3d_9_srcs}
         ${angle_libangle_d3d_11_srcs}
-        ${angle_libangle_d3d_11_win32_srcs}
-        #${angle_libangle_d3d_11_winrt_srcs}
         ${angle_libglesv2_srcs}
         ${angle_egl_srcs}
-        ${angle_systeminfo_srcs}
         ${angle_image_util_srcs})
+
+    if(${flav} STREQUAL win32)
+        list(APPEND __angle_srcs
+            ${angle_systeminfo_srcs}
+            ${angle_libangle_d3d_11_win32_srcs})
+    elseif(${flav} STREQUAL winrt)
+        list(APPEND __angle_srcs
+            ${angle_libangle_d3d_11_winrt_srcs})
+        add_definitions(
+            -D_SCL_SECURE_NO_WARNINGS
+            -D_CRT_SECURE_NO_WARNINGS)
+    else()
+        message(FATAL_ERROR "Unknown target arch: ${flav}")
+    endif()
+
 
     # FIXME: Disables binary with ANGLE_DISABLE_PROGRAM_BINARY_LOAD
     configure_file(${angle_root}/src/commit.h
