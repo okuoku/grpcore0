@@ -37,6 +37,7 @@ else()
 endif()
 
 include(./sdl2.cmake)
+include(./angle-srcs.cmake)
 
 # Generate SDL path
 set(sdl2path_orig ${CMAKE_CURRENT_LIST_DIR}/sdl)
@@ -153,14 +154,23 @@ elseif(${grpcore_platform} STREQUAL "win32")
     # Set toolchain options for SDL2 sources
     set_source_files_properties(${sdl2srcs}
         PROPERTIES
-        COMPILE_DEFINITIONS "_CRT_SECURE_NO_WARNINGS;_WINDOWS"
+        COMPILE_DEFINITIONS "_CRT_SECURE_NO_WARNINGS;_WINDOWS;HAVE_LIBC"
         )
+
+    # Angle
+    set(angle_srcs)
+    use_static_angle(angle_srcs)
 
     add_executable(grpcore0 WIN32
         ${sdl2srcs}
+        ${angle_srcs}
         mysdlmain.c)
 
     target_link_libraries(grpcore0
+        # Angle D3d9
+        #d3d9
+        # Angle D3d11
+        dxguid
         winmm
         imm32
         version)
