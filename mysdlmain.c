@@ -67,6 +67,8 @@ SDL_main(int argc, char** av){
     SDL_DisplayMode mode;
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
+    SDL_GLContext glcontext;
+
 
 #ifdef __EMSCRIPTEN__
     emscripten_set_canvas_size(1280, 720);
@@ -76,14 +78,22 @@ SDL_main(int argc, char** av){
         return -1;
     }
 
+    /* Always use statically linked GLES */
+    SDL_SetHint(SDL_HINT_OPENGL_ES_DRIVER, "1");
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengles2");
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+
     if(SDL_GetCurrentDisplayMode(0, &mode)){
         return -1;
     }
 
-    if(SDL_CreateWindowAndRenderer(mode.w, mode.h, SDL_WINDOW_FULLSCREEN,
+    if(SDL_CreateWindowAndRenderer(mode.w, mode.h, 
+                                   SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL,
                                    &window, &renderer)){
         return -1;
     }
+
+    //glcontext = SDL_GL_CreateContext(window);
 
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop_arg(loop, renderer, 0, 1);

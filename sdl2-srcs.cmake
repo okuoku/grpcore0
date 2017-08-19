@@ -230,7 +230,7 @@ set(sdl2_common_srcs
     video/SDL_blit_slow.c
     video/SDL_bmp.c
     video/SDL_clipboard.c
-    video/SDL_egl.c
+    #video/SDL_egl.c
     video/SDL_fillrect.c
     video/SDL_pixels.c
     video/SDL_rect.c
@@ -239,4 +239,8 @@ set(sdl2_common_srcs
     video/SDL_stretch.c
     video/SDL_surface.c
     video/SDL_video.c
+    )
+
+set(sdl2_egl_srcs
+    video/SDL_egl.c
     )

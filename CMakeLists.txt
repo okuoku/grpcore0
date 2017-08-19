@@ -36,7 +36,7 @@ else()
     message(FATAL_ERROR "Unsupported for now")
 endif()
 
-include(./sdl2.cmake)
+include(./sdl2-srcs.cmake)
 include(./angle-srcs.cmake)
 
 # Generate SDL path
@@ -98,6 +98,7 @@ elseif(${grpcore_platform} STREQUAL "android")
     # Instanciate SDL2 srcs
     set(sdl2srcs)
     foreach(e ${sdl2_common_srcs} ${sdl2_android_srcs}
+            ${sdl2_egl_srcs}
             main/android/SDL_android_main.c)
         list(APPEND sdl2srcs ${sdl2path}/src/${e})
     endforeach()
@@ -151,8 +152,12 @@ elseif(${grpcore_platform} STREQUAL "win32")
     endforeach()
     list(APPEND sdl2srcs ${sdl2win32main})
 
+    set(mysdlegl "patch_sdl/SDL_egl_grpcore0.c")
+    include_directories(${sdl2path}/src/video)
+    list(APPEND sdl2srcs ${mysdlegl})
+
     # Set toolchain options for SDL2 sources
-    set_source_files_properties(${sdl2srcs}
+    set_source_files_properties(${sdl2srcs} 
         PROPERTIES
         COMPILE_DEFINITIONS "_CRT_SECURE_NO_WARNINGS;_WINDOWS;HAVE_LIBC"
         )
