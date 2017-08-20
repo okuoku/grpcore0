@@ -2,17 +2,11 @@
 Building for UWP
 ================
 
- 1) Configure with
+ 1) Configure with CMake comes with VS2017
 
 ```
- cmake -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0.10586.0 \
- -G "Visual Studio 14 Win64" c:\path\to\here
-```
-
- 2) Edit ProjectPriFullPath as
-
-```
-<ProjectPriFullPath>$(ProjectDir)resources.pri</ProjectPriFullPath>
+ cmake -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 \
+ -G "Visual Studio 15 Win64" c:\path\to\here
 ```
 
 Building for Android

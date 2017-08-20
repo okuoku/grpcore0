@@ -48,7 +48,49 @@ file(TO_CMAKE_PATH ${sdl2path_abs} sdl2path)
 include_directories(${sdl2path}/include)
 
 
-if(${grpcore_platform} STREQUAL "uwp")
+if(${grpcore_platform} STREQUAL "win32")
+    # Win32 native
+
+    # Win32 main
+    set(sdl2win32main
+        ${sdl2path}/src/main/windows/SDL_windows_main.c)
+    # Instanciate SDL2 srcs
+    set(sdl2srcs)
+    foreach(e ${sdl2_common_srcs} ${sdl2_win32_common_srcs}
+            ${sdl2_libm_srcs}
+            ${sdl2_win32_desktop_srcs})
+        list(APPEND sdl2srcs ${sdl2path}/src/${e})
+    endforeach()
+    list(APPEND sdl2srcs ${sdl2win32main})
+
+    set(mysdlegl "patch_sdl/SDL_egl_grpcore0.c")
+    include_directories(${sdl2path}/src/video)
+    list(APPEND sdl2srcs ${mysdlegl})
+
+    # Set toolchain options for SDL2 sources
+    set_source_files_properties(${sdl2srcs} 
+        PROPERTIES
+        COMPILE_DEFINITIONS "_CRT_SECURE_NO_WARNINGS;_WINDOWS;HAVE_LIBC"
+        )
+
+    # ANGLE
+    set(angle_srcs)
+    use_static_angle(win32 angle_srcs)
+
+    add_executable(grpcore0 WIN32
+        ${sdl2srcs}
+        ${angle_srcs}
+        mysdlmain.c)
+
+    target_link_libraries(grpcore0
+        # Angle D3d9
+        #d3d9
+        # Angle D3d11
+        dxguid
+        winmm
+        imm32
+        version)
+elseif(${grpcore_platform} STREQUAL "uwp")
     # WinRT(UWP)
 
     # WinRT main
@@ -67,7 +109,7 @@ if(${grpcore_platform} STREQUAL "uwp")
     include_directories(${sdl2path}/src/video)
     list(APPEND sdl2srcs ${mysdlegl})
 
-    # Angle
+    # ANGLE
     set(angle_srcs)
     use_static_angle(winrt angle_srcs)
 
@@ -157,48 +199,6 @@ elseif(${grpcore_platform} STREQUAL "android")
     add_gradle_command(apk_clean
         ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android
         clean)
-elseif(${grpcore_platform} STREQUAL "win32")
-    # Win32 native
-
-    # Win32 main
-    set(sdl2win32main
-        ${sdl2path}/src/main/windows/SDL_windows_main.c)
-    # Instanciate SDL2 srcs
-    set(sdl2srcs)
-    foreach(e ${sdl2_common_srcs} ${sdl2_win32_common_srcs}
-            ${sdl2_libm_srcs}
-            ${sdl2_win32_desktop_srcs})
-        list(APPEND sdl2srcs ${sdl2path}/src/${e})
-    endforeach()
-    list(APPEND sdl2srcs ${sdl2win32main})
-
-    set(mysdlegl "patch_sdl/SDL_egl_grpcore0.c")
-    include_directories(${sdl2path}/src/video)
-    list(APPEND sdl2srcs ${mysdlegl})
-
-    # Set toolchain options for SDL2 sources
-    set_source_files_properties(${sdl2srcs} 
-        PROPERTIES
-        COMPILE_DEFINITIONS "_CRT_SECURE_NO_WARNINGS;_WINDOWS;HAVE_LIBC"
-        )
-
-    # Angle
-    set(angle_srcs)
-    use_static_angle(win32 angle_srcs)
-
-    add_executable(grpcore0 WIN32
-        ${sdl2srcs}
-        ${angle_srcs}
-        mysdlmain.c)
-
-    target_link_libraries(grpcore0
-        # Angle D3d9
-        #d3d9
-        # Angle D3d11
-        dxguid
-        winmm
-        imm32
-        version)
 elseif(${grpcore_platform} STREQUAL "emscripten")
     # Emscripten
     message(STATUS "Generating for emscripten runtime")
@@ -221,5 +221,7 @@ elseif(${grpcore_platform} STREQUAL "emscripten")
     set_target_properties(grpcore0_html
         PROPERTIES
         SUFFIX ".html")
+else()
+    message(FATAL_ERROR "Unknown platform: ${grpcore_platform}")
 endif()
 
