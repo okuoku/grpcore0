@@ -45,7 +45,8 @@ get_filename_component(sdl2path_abs ${sdl2path_orig} ABSOLUTE)
 file(TO_CMAKE_PATH ${sdl2path_abs} sdl2path)
 
 # Include path
-include_directories(${sdl2path}/include)
+include_directories(${sdl2path}/include
+    nanovg/src)
 
 
 if(${grpcore_platform} STREQUAL "win32")
@@ -80,6 +81,7 @@ if(${grpcore_platform} STREQUAL "win32")
     add_executable(grpcore0 WIN32
         ${sdl2srcs}
         ${angle_srcs}
+        nanovg/src/nanovg.c
         mysdlmain.c)
 
     target_link_libraries(grpcore0
@@ -132,6 +134,7 @@ elseif(${grpcore_platform} STREQUAL "uwp")
     add_executable(grpcore0 WIN32
         ${sdl2srcs}
         ${angle_srcs}
+        nanovg/src/nanovg.c
         mysdlmain.c)
     target_link_libraries(grpcore0
         dxguid)
@@ -173,6 +176,7 @@ elseif(${grpcore_platform} STREQUAL "android")
 
     add_library(grpcore0 SHARED
         ${sdl2srcs}
+        nanovg/src/nanovg.c
         mysdlmain.c)
 
     target_link_libraries(grpcore0
@@ -212,6 +216,7 @@ elseif(${grpcore_platform} STREQUAL "emscripten")
 
     add_library(grpcore0 STATIC
         ${sdl2srcs}
+        nanovg/src/nanovg.c
         mysdlmain.c)
 
     add_executable(grpcore0_html

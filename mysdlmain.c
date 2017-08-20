@@ -1,10 +1,18 @@
 /* SDL main */
 
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include <GLES2/gl2platform.h>
+
 #include <SDL.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
+
+#include "nanovg/src/nanovg.h"
+#define NANOVG_GLES2_IMPLEMENTATION
+#include "nanovg/src/nanovg_gl.h"
 
 
 /* 1000 random rects */
@@ -12,6 +20,7 @@
 #define NRECTS 1000
 
 static SDL_Rect rects[NRECTS];
+SDL_Window* theWindow = NULL;
 
 /* From Wikipedia */
 
@@ -50,23 +59,46 @@ layoutrects(void){
 
 static void
 loop(void* p){
-    SDL_Renderer* renderer = (SDL_Renderer *)p;
+    int i;
+    NVGcontext* nvg = (NVGcontext *)p;
     SDL_Event evt;
     while(SDL_PollEvent(&evt)){
     }
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_RenderClear(renderer);
+
+    /* Clear states and the framebuffer */
+    glViewport(0,0,1280,720);
+    glClearColor(0,0,0,0);
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_CULL_FACE);
+
+    /* Prepare GLcontext for 2D drawing */
+    glDisable(GL_DEPTH_TEST);
+
+    /* Begin nanovg drawing */
+    nvgBeginFrame(nvg, 1280, 720, 1.0);
+    nvgFillColor(nvg, nvgRGBA(0,255,0,255));
+    nvgBeginPath(nvg);
+    nvgRect(nvg, 0, 0, 1280, 720);
+    nvgFill(nvg);
+    nvgFillColor(nvg, nvgRGBA(0,0,0,255));
     layoutrects();
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderFillRects(renderer, rects, NRECTS);
-    SDL_RenderPresent(renderer);
+    for(i=0;i!=NRECTS;i++){
+        nvgBeginPath(nvg);
+        nvgCircle(nvg, rects[i].x, rects[i].y, 16);
+        nvgFill(nvg);
+    }
+    nvgEndFrame(nvg);
+
+    SDL_GL_SwapWindow(theWindow);
 }
 
 int
 SDL_main(int argc, char** av){
     SDL_DisplayMode mode;
     SDL_Window* window = NULL;
-    SDL_Renderer* renderer = NULL;
+    NVGcontext* nvg = NULL;
     SDL_GLContext glcontext;
 
 
@@ -80,26 +112,35 @@ SDL_main(int argc, char** av){
 
     /* Always use statically linked GLES */
     SDL_SetHint(SDL_HINT_OPENGL_ES_DRIVER, "1");
-    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengles2");
+    //SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengles2");
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 
     if(SDL_GetCurrentDisplayMode(0, &mode)){
         return -1;
     }
 
-    if(SDL_CreateWindowAndRenderer(mode.w, mode.h, 
-                                   SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL,
-                                   &window, &renderer)){
+    if(!(window = SDL_CreateWindow("grpcore0",
+                                   SDL_WINDOWPOS_UNDEFINED,
+                                   SDL_WINDOWPOS_UNDEFINED,
+                                   mode.w, mode.h, 
+                                   SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL))){
         return -1;
     }
 
-    //glcontext = SDL_GL_CreateContext(window);
+
+    glcontext = SDL_GL_CreateContext(window);
+    SDL_GL_MakeCurrent(window, glcontext);
+    nvg = nvgCreateGLES2(NVG_ANTIALIAS | NVG_DEBUG /* | NVG_STENCIL_STROKES */);
+
+    theWindow = window;
+
+    SDL_GL_SetSwapInterval(0);
 
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop_arg(loop, renderer, 0, 1);
+    emscripten_set_main_loop_arg(loop, nvg, 0, 1);
 #else
     for(;;){
-        loop(renderer);
+        loop(nvg);
     }
 #endif
     return 0;
