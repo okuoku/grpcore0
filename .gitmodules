@@ -1,9 +1,18 @@
 [submodule "sdl"]
-	path = sdl
+	path = externals/sdl
 	url = https://github.com/spurious/SDL-mirror
 [submodule "angle"]
-	path = angle
+	path = externals/angle
 	url = https://github.com/google/angle
 [submodule "nanovg"]
-	path = nanovg
+	path = externals/nanovg
+	url = https://github.com/memononen/nanovg
+[submodule "externals/sdl"]
+	path = externals/sdl
+	url = https://github.com/spurious/SDL-mirror
+[submodule "externals/angle"]
+	path = externals/angle
+	url = https://github.com/google/angle
+[submodule "externals/nanovg"]
+	path = externals/nanovg
 	url = https://github.com/memononen/nanovg

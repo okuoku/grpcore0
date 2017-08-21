@@ -10,9 +10,9 @@
 #include <emscripten.h>
 #endif
 
-#include "nanovg/src/nanovg.h"
+#include "externals/nanovg/src/nanovg.h"
 #define NANOVG_GLES2_IMPLEMENTATION
-#include "nanovg/src/nanovg_gl.h"
+#include "externals/nanovg/src/nanovg_gl.h"
 
 
 /* 1000 random rects */

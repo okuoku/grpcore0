@@ -1,4 +1,4 @@
-set(angle_root angle/)
+set(angle_root externals/angle)
 
 set(angle_fe_translator_srcs
     # Common translator (instatiates implementation)
