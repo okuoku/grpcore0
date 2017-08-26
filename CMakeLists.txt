@@ -25,7 +25,11 @@ endif()
 
 # 2nd chance
 if(NOT grpcore_platform)
-    if(WIN32)
+    if(ANDROID_ABI)
+        # Prefer Android first -- it seems we have WIN32 here...
+        set(grpcore_platform "android")
+        set(GRPCORE_SKIP_PACKAGING ON)
+    elseif(WIN32)
         set(grpcore_platform "win32")
     endif()
 endif()
@@ -188,21 +192,23 @@ elseif(${grpcore_platform} STREQUAL "android")
         log
         android)
 
-    # Android packaging
-    set(deploy_destdir
-        ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android/src/main/libs/armeabi-v7a)
-    add_custom_command(
-        TARGET grpcore0 POST_BUILD
-        COMMAND ${CMAKE_COMMAND}
-        -DIN=$<TARGET_FILE:grpcore0> -DOUTDIR=${deploy_destdir}
-        -P ${CMAKE_CURRENT_LIST_DIR}/cmake/deploy_file.cmake
-        )
-    add_gradle_command(apk ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android
-        build)
-    add_dependencies(apk grpcore0)
-    add_gradle_command(apk_clean
-        ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android
-        clean)
+    if(NOT GRPCORE_SKIP_PACKAGING)
+        # Android packaging
+        set(deploy_destdir
+            ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android/src/main/libs/armeabi-v7a)
+        add_custom_command(
+            TARGET grpcore0 POST_BUILD
+            COMMAND ${CMAKE_COMMAND}
+            -DIN=$<TARGET_FILE:grpcore0> -DOUTDIR=${deploy_destdir}
+            -P ${CMAKE_CURRENT_LIST_DIR}/cmake/deploy_file.cmake
+            )
+        add_gradle_command(apk ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android
+            build)
+        add_dependencies(apk grpcore0)
+        add_gradle_command(apk_clean
+            ${CMAKE_CURRENT_SOURCE_DIR}/pkg/android
+            clean)
+    endif()
 elseif(${grpcore_platform} STREQUAL "emscripten")
     # Emscripten
     message(STATUS "Generating for emscripten runtime")

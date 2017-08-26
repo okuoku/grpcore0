@@ -107,6 +107,8 @@ set(sdl2_android_srcs
     # FIXME: Not andorid specific..
     timer/unix/SDL_systimer.c
 
+    haptic/android/SDL_syshaptic.c
+
     video/android/SDL_androidclipboard.c
     video/android/SDL_androidevents.c
     video/android/SDL_androidgl.c
