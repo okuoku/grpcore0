@@ -12,16 +12,7 @@ Building for UWP
 Building for Android
 ====================
 
- 1) Configure with
-
-```
-cmake.exe -G "Visual Studio 14 ARM" -DCMAKE_SYSTEM_NAME=VCMDDAndroid \
-c:\path\to\here
-```
-
- As of this writing, VCMDDAndroid is not merged to the official CMake project.
- See
-  https://blogs.msdn.microsoft.com/vcblog/2015/12/15/support-for-android-cmake-projects-in-visual-studio/
+ 1) Open pkg/android directory with Android Studio
 
 Building for Emscripten
 =======================
@@ -30,8 +21,5 @@ Building for Emscripten
 
 ```
 emconfigure cmake -G Ninja c:\path\to\here
-emconfigure cmake -G Ninja c:\path\to\here
 ```
-
-Currently we have to configure twice (to make CMakeCache settle).
 
