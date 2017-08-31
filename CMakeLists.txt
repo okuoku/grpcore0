@@ -6,6 +6,11 @@ cmake_minimum_required(VERSION 2.8)
 set(grpcore_platform)
 
 message(STATUS "Toolchain = [${CMAKE_TOOLCHAIN_FILE}]")
+if(CMAKE_TOOLCHAIN_FILE)
+    # FIXME: Why? Perhaps we have to consider platform BEFORE project()
+    message(STATUS "Reloading toolchain file...")
+    include(${CMAKE_TOOLCHAIN_FILE})
+endif()
 message(STATUS "System = [${CMAKE_SYSTEM_NAME}]")
 
 message(STATUS "Emscripten = ${EMSCRIPTEN}")
