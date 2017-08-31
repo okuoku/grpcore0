@@ -221,7 +221,7 @@ elseif(${grpcore_platform} STREQUAL "emscripten")
         BEFORE # Override SDL_config.h
         ${CMAKE_CURRENT_LIST_DIR}/include_sdl/emscripten)
     set(sdl2srcs)
-    foreach(e ${sdl2_common_srcs} ${sdl2_emscripten_srcs})
+    foreach(e ${sdl2_common_srcs} ${sdl2_emscripten_srcs} ${sdl2_egl_srcs})
         list(APPEND sdl2srcs ${sdl2path}/src/${e})
     endforeach()
 
