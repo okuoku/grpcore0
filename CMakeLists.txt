@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.6)
 
 # Platform dispatching
 # See https://cmake.org/cmake/help/v3.5/manual/cmake-toolchains.7.html
@@ -17,6 +17,7 @@ message(STATUS "Emscripten = ${EMSCRIPTEN}")
 
 if(EMSCRIPTEN)
     set(grpcore_platform "emscripten")
+    set(GRPCORE_LOCAL_CONFIG ON)
 endif()
 
 # VisualStudio
@@ -34,6 +35,9 @@ if(NOT grpcore_platform)
         # Prefer Android first -- it seems we have WIN32 here...
         set(grpcore_platform "android")
         set(GRPCORE_SKIP_PACKAGING ON)
+    elseif(CYGWIN OR UNIX)
+        set(grpcore_platform "posix")
+        set(GRPCORE_LOCAL_CONFIG ON)
     elseif(WIN32)
         set(grpcore_platform "win32")
     endif()
@@ -54,9 +58,12 @@ get_filename_component(sdl2path_abs ${sdl2path_orig} ABSOLUTE)
 file(TO_CMAKE_PATH ${sdl2path_abs} sdl2path)
 
 # Include path
-include_directories(${sdl2path}/include
-    externals/nanovg/src)
+if(NOT GRPCORE_LOCAL_CONFIG)
+    include_directories(${sdl2path}/include)
+endif()
 
+include_directories(
+    externals/nanovg/src)
 
 if(${grpcore_platform} STREQUAL "win32")
     # Win32 native
@@ -101,6 +108,47 @@ if(${grpcore_platform} STREQUAL "win32")
         winmm
         imm32
         version)
+elseif(${grpcore_platform} STREQUAL "posix") # FIXME: X11
+    # Instanciate SDL2 srcs
+    set(sdl2srcs)
+    foreach(e 
+            ${sdl2_common_srcs} 
+            ${sdl2_libm_srcs}
+            ${sdl2_posix_srcs}
+            ${sdl2_x11_srcs}
+            )
+        list(APPEND sdl2srcs ${sdl2path}/src/${e})
+    endforeach()
+    set(mysdlegl "patch_sdl/SDL_egl_grpcore0.c")
+
+    # Don't use Win32 backends on Cygwin
+    add_definitions(
+        -DUSING_GENERATED_CONFIG_H
+        -DHAVE_LIBC
+        -DSDL_TIMER_UNIX
+        -DHAVE_NANOSLEEP
+        -DHAVE_CLOCK_GETTIME
+        -DSDL_THREAD_PTHREAD
+        # Obvious.
+        -DSDL_VIDEO_DRIVER_X11_SUPPORTS_GENERIC_EVENTS
+        )
+    include_directories(
+        ${CMAKE_CURRENT_LIST_DIR}/include_sdl/posix
+        ${sdl2path}/include
+        ${sdl2path}/src/video
+        )
+
+    add_executable(grpcore0
+        ${sdl2srcs}
+        ${mysdlegl}
+        externals/nanovg/src/nanovg.c
+        mysdlmain.c)
+    target_link_libraries(grpcore0
+        X11
+        Xext
+        iconv
+        EGL
+        GLESv2)
 elseif(${grpcore_platform} STREQUAL "uwp")
     # WinRT(UWP)
 
@@ -172,7 +220,7 @@ elseif(${grpcore_platform} STREQUAL "android")
     # Instanciate SDL2 srcs
     set(sdl2srcs)
     foreach(e ${sdl2_common_srcs} ${sdl2_android_srcs}
-            ${sdl2_egl_srcs}
+            ${sdl2_egl_srcs} ${sdl2_posix_srcs}
             main/android/SDL_android_main.c)
         list(APPEND sdl2srcs ${sdl2path}/src/${e})
     endforeach()

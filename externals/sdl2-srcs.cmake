@@ -82,30 +82,30 @@ set(sdl2_emscripten_srcs
     thread/generic/SDL_systls.c
     )
 
-set(sdl2_android_srcs
-    audio/android/SDL_androidaudio.c
-    # atomic/SDL_spinlock.c.arm # FIXME: generate this?
-    core/android/SDL_android.c
-    joystick/android/SDL_sysjoystick.c
-
-    # FIXME: Not andorid specific..
+set(sdl2_posix_srcs
     loadso/dlopen/SDL_sysloadso.c
 
-    power/android/SDL_syspower.c
-    filesystem/android/SDL_sysfilesystem.c
-
-    # FIXME: Not andorid specific..
     render/opengles/SDL_render_gles.c
 
-    # FIXME: Not andorid specific..
     thread/pthread/SDL_syscond.c
     thread/pthread/SDL_sysmutex.c
     thread/pthread/SDL_syssem.c
     thread/pthread/SDL_systhread.c
     thread/pthread/SDL_systls.c
 
-    # FIXME: Not andorid specific..
     timer/unix/SDL_systimer.c
+    )
+
+set(sdl2_android_srcs
+    audio/android/SDL_androidaudio.c
+    # atomic/SDL_spinlock.c.arm # FIXME: generate this?
+    core/android/SDL_android.c
+    joystick/android/SDL_sysjoystick.c
+
+
+    power/android/SDL_syspower.c
+    filesystem/android/SDL_sysfilesystem.c
+
 
     haptic/android/SDL_syshaptic.c
 
@@ -119,6 +119,28 @@ set(sdl2_android_srcs
     video/android/SDL_androidvideo.c
     video/android/SDL_androidwindow.c
     )
+
+set(sdl2_x11_srcs
+    # FIXME: OK?
+    core/unix/SDL_poll.c
+
+    video/x11/edid-parse.c
+    video/x11/imKStoUCS.c
+    video/x11/SDL_x11clipboard.c
+    video/x11/SDL_x11dyn.c
+    video/x11/SDL_x11events.c
+    video/x11/SDL_x11framebuffer.c
+    video/x11/SDL_x11keyboard.c
+    video/x11/SDL_x11messagebox.c
+    video/x11/SDL_x11modes.c
+    video/x11/SDL_x11mouse.c
+    video/x11/SDL_x11opengl.c
+    video/x11/SDL_x11opengles.c
+    video/x11/SDL_x11shape.c
+    video/x11/SDL_x11touch.c
+    video/x11/SDL_x11video.c
+    video/x11/SDL_x11window.c
+    video/x11/SDL_x11xinput2.c)
 
 set(sdl2_stdcpp_srcs
     # FIXME: OK?
@@ -165,7 +187,7 @@ set(sdl2_common_srcs
 
     cpuinfo/SDL_cpuinfo.c
 
-    dynapi/SDL_dynapi.c
+    # dynapi/SDL_dynapi.c
 
     events/SDL_clipboardevents.c
     events/SDL_dropevents.c

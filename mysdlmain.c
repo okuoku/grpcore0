@@ -4,6 +4,11 @@
 #include <GLES2/gl2ext.h>
 #include <GLES2/gl2platform.h>
 
+#ifdef __CYGWIN__
+#define SDL_MAIN_HANDLED
+#define SDL_main main
+#endif
+#include "SDL_config.h" /* Some of us use special SDL_config.h during build */
 #include <SDL.h>
 
 #ifdef __EMSCRIPTEN__
