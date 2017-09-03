@@ -19,6 +19,11 @@
 #define NANOVG_GLES2_IMPLEMENTATION
 #include "externals/nanovg/src/nanovg_gl.h"
 
+#include <cimgui.h>
+int imgui_wrap_init(SDL_Window* window);
+void imgui_wrap_newframe(SDL_Window* window);
+int imgui_wrap_process_event(SDL_Event* event);
+void imgui_wrap_demo_showtest(void);
 
 /* 1000 random rects */
 
@@ -67,11 +72,15 @@ loop(void* p){
     int i;
     NVGcontext* nvg = (NVGcontext *)p;
     SDL_Event evt;
+
     while(SDL_PollEvent(&evt)){
+        imgui_wrap_process_event(&evt);
         if(evt.type == SDL_QUIT){
             exit(0);
         }
     }
+    imgui_wrap_newframe(theWindow);
+    imgui_wrap_demo_showtest();
 
     /* Clear states and the framebuffer */
     glViewport(0,0,1280,720);
@@ -98,6 +107,8 @@ loop(void* p){
         nvgFill(nvg);
     }
     nvgEndFrame(nvg);
+
+    igRender();
 
     SDL_GL_SwapWindow(theWindow);
 }
@@ -138,6 +149,12 @@ SDL_main(int argc, char** av){
     h = 720;
 #endif
 
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+
     if(!(window = SDL_CreateWindow("grpcore0",
                                    SDL_WINDOWPOS_UNDEFINED,
                                    SDL_WINDOWPOS_UNDEFINED,
@@ -149,11 +166,13 @@ SDL_main(int argc, char** av){
 
     glcontext = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, glcontext);
+    imgui_wrap_init(window);
     nvg = nvgCreateGLES2(NVG_ANTIALIAS | NVG_DEBUG /* | NVG_STENCIL_STROKES */);
 
     theWindow = window;
 
     SDL_GL_SetSwapInterval(0);
+
 
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop_arg(loop, nvg, 0, 1);

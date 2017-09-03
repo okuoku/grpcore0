@@ -69,6 +69,8 @@ endforeach()
 
 set(common_srcs
     externals/nanovg/src/nanovg.c
+    externals/imgui_impl_sdl/imgui_impl_sdl.cpp
+    imgui_wrapper.cpp
     ${cimguisrcs})
 
 include_directories(
