@@ -105,6 +105,7 @@ SDL_main(int argc, char** av){
     SDL_Window* window = NULL;
     NVGcontext* nvg = NULL;
     SDL_GLContext glcontext;
+    uint32_t flags,w,h;
 
 
 #ifdef __EMSCRIPTEN__
@@ -120,15 +121,25 @@ SDL_main(int argc, char** av){
     //SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengles2");
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 
+
+#ifdef GRPCORE_FULLSCREEN
+    flags = SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL;
     if(SDL_GetCurrentDisplayMode(0, &mode)){
         return -1;
     }
+    w = mode.w;
+    h = mode.h;
+#else
+    flags = SDL_WINDOW_OPENGL;
+    w = 1280;
+    h = 720;
+#endif
 
     if(!(window = SDL_CreateWindow("grpcore0",
                                    SDL_WINDOWPOS_UNDEFINED,
                                    SDL_WINDOWPOS_UNDEFINED,
-                                   mode.w, mode.h, 
-                                   SDL_WINDOW_FULLSCREEN | SDL_WINDOW_OPENGL))){
+                                   w, h, 
+                                   flags))){
         return -1;
     }
 
