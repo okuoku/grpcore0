@@ -295,7 +295,7 @@ bool ImGui_ImplSdl_Init(SDL_Window *window)
     io.SetClipboardTextFn = ImGui_ImplSdl_SetClipboardText;
     io.GetClipboardTextFn = ImGui_ImplSdl_GetClipboardText;
 	
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(SDL_VIDEO_DRIVER_WINRT)
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);
     SDL_GetWindowWMInfo(window, &wmInfo);

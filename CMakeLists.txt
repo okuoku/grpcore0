@@ -224,10 +224,14 @@ elseif(${grpcore_platform} STREQUAL "uwp")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
     endif()
 
+    add_definitions(
+        -DIMGUI_DISABLE_WIN32_DEFAULT_CLIPBOARD_FUNCS
+        -DIMGUI_DISABLE_WIN32_DEFAULT_IME_FUNCS)
+
     add_executable(grpcore0 WIN32
         ${sdl2srcs}
         ${angle_srcs}
-        externals/nanovg/src/nanovg.c
+        ${common_srcs}
         mysdlmain.c)
     target_link_libraries(grpcore0
         dxguid)
