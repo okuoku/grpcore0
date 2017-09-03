@@ -58,6 +58,11 @@ set(sdl2path_orig ${CMAKE_CURRENT_LIST_DIR}/externals/sdl)
 get_filename_component(sdl2path_abs ${sdl2path_orig} ABSOLUTE)
 file(TO_CMAKE_PATH ${sdl2path_abs} sdl2path)
 
+# Patch SDL not to use DynAPI
+configure_file(patch_sdl/SDL_dynapi.h
+    ${sdl2path}/src/dynapi/SDL_dynapi.h
+    COPYONLY)
+
 # Generate cimgui path
 set(cimguipath_orig ${CMAKE_CURRENT_LIST_DIR}/externals/cimgui)
 get_filename_component(cimguipath_abs ${cimguipath_orig} ABSOLUTE)
@@ -115,10 +120,15 @@ if(${grpcore_platform} STREQUAL "win32")
     set(angle_srcs)
     use_static_angle(win32 angle_srcs)
 
+    if(MSVC)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+    endif()
+
     add_executable(grpcore0 WIN32
         ${sdl2srcs}
         ${angle_srcs}
-        externals/nanovg/src/nanovg.c
+        ${common_srcs}
         mysdlmain.c)
 
     target_link_libraries(grpcore0
@@ -208,6 +218,11 @@ elseif(${grpcore_platform} STREQUAL "uwp")
     # sdl2winrt: Assign /ZW 
     set_source_files_properties(${sdl2winrt}
         COMPILE_FLAGS "/ZW")
+
+    if(MSVC)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+    endif()
 
     add_executable(grpcore0 WIN32
         ${sdl2srcs}
