@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 2.8.6)
 set(grpcore_platform)
 
 message(STATUS "Toolchain = [${CMAKE_TOOLCHAIN_FILE}]")
-if(CMAKE_TOOLCHAIN_FILE)
+if(CMAKE_TOOLCHAIN_FILE AND NOT ANDROID_ABI)
     # FIXME: Why? Perhaps we have to consider platform BEFORE project()
     message(STATUS "Reloading toolchain file...")
     include(${CMAKE_TOOLCHAIN_FILE})
@@ -273,7 +273,7 @@ elseif(${grpcore_platform} STREQUAL "android")
 
     add_library(grpcore0 SHARED
         ${sdl2srcs}
-        externals/nanovg/src/nanovg.c
+        ${common_srcs}
         mysdlmain.c)
 
     target_link_libraries(grpcore0
