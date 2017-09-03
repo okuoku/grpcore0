@@ -63,6 +63,14 @@ configure_file(patch_sdl/SDL_dynapi.h
     ${sdl2path}/src/dynapi/SDL_dynapi.h
     COPYONLY)
 
+# Patch ANGLE (Tentative)
+configure_file(patch_angle/NativeWindow11WinRT.h
+    externals/angle/src/libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h
+    COPYONLY)
+configure_file(patch_angle/NativeWindow11WinRT.cpp
+    externals/angle/src/libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.cpp
+    COPYONLY)
+
 # Generate cimgui path
 set(cimguipath_orig ${CMAKE_CURRENT_LIST_DIR}/externals/cimgui)
 get_filename_component(cimguipath_abs ${cimguipath_orig} ABSOLUTE)
@@ -319,6 +327,9 @@ elseif(${grpcore_platform} STREQUAL "emscripten")
         ${sdl2srcs}
         ${common_srcs}
         mysdlmain.c)
+
+    #set(CMAKE_C_FLAGS "${CMAKC_C_FLAGS} -g4")
+    #set(CMAKE_EXE_LINKER_FLAGS "-s SAFE_HEAP=1")
 
     add_executable(grpcore0_html
         pkg/emscripten/emmain.c)
