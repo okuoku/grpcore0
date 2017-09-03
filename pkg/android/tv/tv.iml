@@ -60,6 +60,15 @@
       <excludeFolder url="file://$MODULE_DIR$/build/reports" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
+    <content url="file://$MODULE_DIR$/../../../externals/cimgui/cimgui">
+      <sourceFolder url="file://$MODULE_DIR$/../../../externals/cimgui/cimgui" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../externals/cimgui/imgui">
+      <sourceFolder url="file://$MODULE_DIR$/../../../externals/cimgui/imgui" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../externals/imgui_impl_sdl">
+      <sourceFolder url="file://$MODULE_DIR$/../../../externals/imgui_impl_sdl" isTestSource="false" />
+    </content>
     <content url="file://$MODULE_DIR$/../../../externals/nanovg/src">
       <sourceFolder url="file://$MODULE_DIR$/../../../externals/nanovg/src" isTestSource="false" />
     </content>
@@ -86,9 +95,6 @@
     </content>
     <content url="file://$MODULE_DIR$/../../../externals/sdl/src/cpuinfo">
       <sourceFolder url="file://$MODULE_DIR$/../../../externals/sdl/src/cpuinfo" isTestSource="false" />
-    </content>
-    <content url="file://$MODULE_DIR$/../../../externals/sdl/src/dynapi">
-      <sourceFolder url="file://$MODULE_DIR$/../../../externals/sdl/src/dynapi" isTestSource="false" />
     </content>
     <content url="file://$MODULE_DIR$/../../../externals/sdl/src/events">
       <sourceFolder url="file://$MODULE_DIR$/../../../externals/sdl/src/events" isTestSource="false" />
