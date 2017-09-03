@@ -68,6 +68,9 @@ loop(void* p){
     NVGcontext* nvg = (NVGcontext *)p;
     SDL_Event evt;
     while(SDL_PollEvent(&evt)){
+        if(evt.type == SDL_QUIT){
+            exit(0);
+        }
     }
 
     /* Clear states and the framebuffer */
