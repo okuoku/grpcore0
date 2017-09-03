@@ -305,17 +305,19 @@ elseif(${grpcore_platform} STREQUAL "android")
 elseif(${grpcore_platform} STREQUAL "emscripten")
     # Emscripten
     message(STATUS "Generating for emscripten runtime")
-    include_directories(
-        BEFORE # Override SDL_config.h
-        ${CMAKE_CURRENT_LIST_DIR}/include_sdl/emscripten)
     set(sdl2srcs)
     foreach(e ${sdl2_common_srcs} ${sdl2_emscripten_srcs} ${sdl2_egl_srcs})
         list(APPEND sdl2srcs ${sdl2path}/src/${e})
     endforeach()
 
+    include_directories(
+        ${CMAKE_CURRENT_LIST_DIR}/include_sdl/emscripten
+        ${sdl2path}/include
+        ${sdl2path}/src/video
+        )
     add_library(grpcore0 STATIC
         ${sdl2srcs}
-        externals/nanovg/src/nanovg.c
+        ${common_srcs}
         mysdlmain.c)
 
     add_executable(grpcore0_html

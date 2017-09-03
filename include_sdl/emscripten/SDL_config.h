@@ -1,7 +1,7 @@
 /* Feed static SDL_config.h for emscripten. */
 
-#ifndef _SDL_config_h
-#define _SDL_config_h
+#ifndef SDL_config_h_
+#define SDL_config_h_
 
 #include "SDL_platform.h"
 
