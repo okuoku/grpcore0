@@ -16,3 +16,6 @@
 [submodule "externals/nanovg"]
 	path = externals/nanovg
 	url = https://github.com/memononen/nanovg
+[submodule "externals/cimgui"]
+	path = externals/cimgui
+	url = https://github.com/Extrawurst/cimgui

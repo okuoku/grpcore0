@@ -51,19 +51,38 @@ endif()
 
 include(./externals/sdl2-srcs.cmake)
 include(./externals/angle-srcs.cmake)
+include(./externals/cimgui-srcs.cmake)
 
 # Generate SDL path
 set(sdl2path_orig ${CMAKE_CURRENT_LIST_DIR}/externals/sdl)
 get_filename_component(sdl2path_abs ${sdl2path_orig} ABSOLUTE)
 file(TO_CMAKE_PATH ${sdl2path_abs} sdl2path)
 
+# Generate cimgui path
+set(cimguipath_orig ${CMAKE_CURRENT_LIST_DIR}/externals/cimgui)
+get_filename_component(cimguipath_abs ${cimguipath_orig} ABSOLUTE)
+file(TO_CMAKE_PATH ${cimguipath_abs} cimguipath)
+set(cimguisrcs)
+foreach(e ${cimgui_srcs})
+    list(APPEND cimguisrcs ${cimguipath}/${e})
+endforeach()
+
+set(common_srcs
+    externals/nanovg/src/nanovg.c
+    ${cimguisrcs})
+
+include_directories(
+    ${cimguipath}/imgui
+    ${cimguipath}/cimgui
+    externals/nanovg/src)
+
+add_definitions(-DCIMGUI_NO_EXPORT)
+
 # Include path
 if(NOT GRPCORE_LOCAL_CONFIG)
     include_directories(${sdl2path}/include)
 endif()
 
-include_directories(
-    externals/nanovg/src)
 
 if(${grpcore_platform} STREQUAL "win32")
     # Win32 native
@@ -141,7 +160,7 @@ elseif(${grpcore_platform} STREQUAL "posix") # FIXME: X11
     add_executable(grpcore0
         ${sdl2srcs}
         ${mysdlegl}
-        externals/nanovg/src/nanovg.c
+        ${common_srcs}
         mysdlmain.c)
     target_link_libraries(grpcore0
         X11
