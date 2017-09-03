@@ -4,7 +4,7 @@
 #include <GLES2/gl2ext.h>
 #include <GLES2/gl2platform.h>
 
-#ifdef __CYGWIN__
+#if !defined(__ANDROID__) && (defined(__CYGWIN__) || defined(__linux__))
 #define SDL_MAIN_HANDLED
 #define SDL_main main
 #endif
@@ -62,7 +62,8 @@ layoutrect(SDL_Rect* r){
 
 static void
 layoutrects(void){
-    for(int i=0;i!=NRECTS;i++){
+    int i;
+    for(i=0;i!=NRECTS;i++){
         layoutrect(&rects[i]);
     }
 }

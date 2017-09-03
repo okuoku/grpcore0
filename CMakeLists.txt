@@ -31,7 +31,10 @@ endif()
 
 # 2nd chance
 if(NOT grpcore_platform)
-    if(ANDROID_ABI)
+    if(GRPCORE0_RPI)
+        set(grpcore_platform "rpi")
+        set(GRPCORE_LOCAL_CONFIG ON)
+    elseif(ANDROID_ABI)
         # Prefer Android first -- it seems we have WIN32 here...
         set(grpcore_platform "android")
         set(GRPCORE_SKIP_PACKAGING ON)
@@ -188,6 +191,51 @@ elseif(${grpcore_platform} STREQUAL "posix") # FIXME: X11
         iconv
         EGL
         GLESv2)
+elseif(${grpcore_platform} STREQUAL "rpi")
+    # Instanciate SDL2 srcs
+    set(sdl2srcs)
+    foreach(e 
+            ${sdl2_common_srcs} 
+            ${sdl2_libm_srcs}
+            ${sdl2_posix_srcs}
+            ${sdl2_rpi_srcs}
+            )
+        list(APPEND sdl2srcs ${sdl2path}/src/${e})
+    endforeach()
+    set(mysdlegl "patch_sdl/SDL_egl_grpcore0.c")
+
+    add_definitions(
+        -DGRPCORE_FULLSCREEN
+        -DUSING_GENERATED_CONFIG_H
+        -DHAVE_LIBC
+        -DSDL_TIMER_UNIX
+        -DHAVE_NANOSLEEP
+        -DHAVE_CLOCK_GETTIME
+        -DSDL_THREAD_PTHREAD
+        )
+    include_directories(
+        ${CMAKE_SYSROOT}/opt/vc/include
+        ${CMAKE_CURRENT_LIST_DIR}/include_sdl/rpi
+        ${sdl2path}/include
+        ${sdl2path}/src/video
+        )
+    link_directories(${CMAKE_SYSROOT}/opt/vc/lib)
+
+    add_executable(grpcore0
+        ${sdl2srcs}
+        ${mysdlegl}
+        ${common_srcs}
+        mysdlmain.c)
+    target_link_libraries(grpcore0
+        bcm_host
+        vchiq_arm
+        vcos
+        khrn_static
+        dl
+        pthread
+        #iconv
+        EGL_static
+        GLESv2_static)
 elseif(${grpcore_platform} STREQUAL "uwp")
     # WinRT(UWP)
 

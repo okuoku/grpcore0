@@ -255,10 +255,12 @@ SDL_EGL_LoadLibrary(_THIS, const char *egl_path, NativeDisplayType native_displa
             }
         }
     }
-
+#ifdef EGL_VERSION_1_5
+    /* Grpcore0: RPi BCM EGL is 1.4 */
     if (egl_version_major == 1 && egl_version_minor == 5) {
         LOAD_FUNC(eglGetPlatformDisplay);
     }
+#endif
 
     _this->egl_data->egl_display = EGL_NO_DISPLAY;
 #if !defined(__WINRT__)

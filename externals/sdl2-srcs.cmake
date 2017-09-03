@@ -120,6 +120,12 @@ set(sdl2_android_srcs
     video/android/SDL_androidwindow.c
     )
 
+set(sdl2_rpi_srcs
+    video/raspberry/SDL_rpievents.c
+    video/raspberry/SDL_rpimouse.c
+    video/raspberry/SDL_rpiopengles.c
+    video/raspberry/SDL_rpivideo.c)
+
 set(sdl2_x11_srcs
     # FIXME: OK?
     core/unix/SDL_poll.c
