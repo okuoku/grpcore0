@@ -185,10 +185,19 @@ elseif(${grpcore_platform} STREQUAL "posix") # FIXME: X11
         ${mysdlegl}
         ${common_srcs}
         mysdlmain.c)
+    if(CYGWIN)
+        set(extra_libs
+            iconv)
+    else()
+        # Linux
+        set(extra_libs
+            pthread
+            dl)
+    endif()
     target_link_libraries(grpcore0
+        ${extra_libs}
         X11
         Xext
-        iconv
         EGL
         GLESv2)
 elseif(${grpcore_platform} STREQUAL "rpi")
