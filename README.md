@@ -23,3 +23,21 @@ Building for Emscripten
 emconfigure cmake -G Ninja c:\path\to\here
 ```
 
+Building for RaspberryPi
+========================
+
+ 1) Configigure with CMake, say `-DGRPCORE0_RPI=1`
+
+- Grpcore will use statically-linked OpenGLES stack from broadcom
+- `cmake/toolchain` includes toolchain file for SysGCC to support development on Windows
+
+Building for Linux/Cygwin (X11)
+===============================
+
+ 1) Install development packages
+
+```
+apt install libgles2-mesa-dev # On Linux(Ubuntu)
+```
+
+ 2) Configure with CMake
